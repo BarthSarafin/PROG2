@@ -1,4 +1,4 @@
-package util;
+package lab01.util;
 
 import java.io.PrintWriter;
 import java.sql.*;
@@ -82,6 +82,6 @@ public class SimpleDataSource implements DataSource {
 
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new SQLFeatureNotSupportedException(
-                "Not supporting java.util.logging.Logger");
+                "Not supporting java.lab01.util.logging.Logger");
     }
 }

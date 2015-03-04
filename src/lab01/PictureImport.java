@@ -1,5 +1,6 @@
+package lab01;
+
 import java.sql.*;
-import java.util.*;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,10 +10,8 @@ import java.net.URL;
 import java.util.Date;
 
 import javax.sql.DataSource;
-import javax.xml.transform.sax.SAXSource;
 
-import util.SimpleDataSource;
-import model.Picture;
+import lab01.util.SimpleDataSource;
 
 /* This test-application reads some picture data from terminal, 
  * saves it to the DB, read it from the DB and prints the result

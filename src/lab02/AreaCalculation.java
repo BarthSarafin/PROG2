@@ -1,7 +1,5 @@
 package lab02;
 
-import java.util.ArrayList;
-
 /**
  * @author Stefan R. Bachmann on  11.03.2015
  * @version v0.1 - lab02

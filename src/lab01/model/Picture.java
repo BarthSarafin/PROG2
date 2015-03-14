@@ -1,4 +1,4 @@
-package lab01;
+package lab01.model;
 
 import java.net.URL;
 import java.util.Date;

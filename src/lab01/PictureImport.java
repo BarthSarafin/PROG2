@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 
+import lab01.model.Picture;
 import lab01.util.SimpleDataSource;
 
 /* This test-application reads some picture data from terminal, 
@@ -172,7 +173,9 @@ public class PictureImport {
                                                 date,
                                                 fragments[4],
                                                 fragments[5],
-                                                Float.valueOf(fragments[1]),Float.valueOf(fragments[2]),Float.valueOf(fragments[3]));
+                                                Float.valueOf(fragments[1]),
+                                                Float.valueOf(fragments[2]),
+                                                Float.valueOf(fragments[3]));
             return newPicture;
         } catch (MalformedURLException |ParseException e) {
             e.printStackTrace();

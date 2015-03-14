@@ -1,16 +1,15 @@
-package dao;
+package lab01.dao;
 
+import java.io.File;
 import java.util.*;
 
-import javax.sql.DataSource;
-
 import model.Picture;
-import dao.PictureDAO;
+import lab01.dao.PictureDAO;
 
-public class PictureJdbcDAO implements PictureDAO {
-    private DataSource dataSource;
+public class PictureFileDAO implements PictureDAO {
+    private File dataSource;
 
-    public PictureJdbcDAO(DataSource dataSource) {
+    public PictureFileDAO(File dataSource) {
         super();
         this.dataSource = dataSource;
     }
@@ -19,6 +18,7 @@ public class PictureJdbcDAO implements PictureDAO {
     public void insert(Picture item) {
         // TODO Implement method
         throw new UnsupportedOperationException("Not yet implemented");
+
     }
 
     @Override
@@ -52,8 +52,8 @@ public class PictureJdbcDAO implements PictureDAO {
     }
 
     @Override
-    public Collection<Picture> findByPosition(float longitude, 
-            float latitude, float deviation) {
+    public Collection<Picture> findByPosition(float longitude, float latitude,
+            float deviation) {
         // TODO Implement method
         return null;
     }

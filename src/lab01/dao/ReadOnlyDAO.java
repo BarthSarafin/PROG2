@@ -1,4 +1,4 @@
-package dao;
+package lab01.dao;
 
 import java.util.*;
 

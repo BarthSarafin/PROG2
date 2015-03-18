@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="2100890018">
+    <data-source source="LOCAL" name="PostgreSQL - camenfa1@dublin.zhaw.ch" uuid="547e53b4-5453-43ad-a909-7ffed388f4ce">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://dublin.zhaw.ch/camenfa1</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>

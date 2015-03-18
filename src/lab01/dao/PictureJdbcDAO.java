@@ -72,19 +72,22 @@ public class PictureJdbcDAO implements PictureDAO {
     @Override
     public void delete(Picture item) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "DELETE FROM picture WHERE id = ?";
+            String sql = "DELETE FROM picture WHERE title = ? AND longitude = ? AND latitude = ? and comment = ? ";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, item.getId());
+            ps.setString(1, item.getTitle());
+            ps.setFloat(2,item.getLongitude());
+            ps.setFloat(3,item.getLatitude());
+            ps.setString(4,item.getUrl().toString());
             ps.execute();
             
         } catch (SQLException e) {
             throw new RuntimeException("DB operation failed: Select * FROM picture", e);
         }
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public Picture findById(int id) {
+        System.out.println("find by id mit id"+id);
         try (Connection conn = dataSource.getConnection()) {
             String sql = "SELECT * FROM picture WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -95,15 +98,15 @@ public class PictureJdbcDAO implements PictureDAO {
             //Der Cursor im Resultset steht am Anfange BEVOR der
             //ersten reihe
             rs.next();
-
-
-            Picture newPic = new Picture(rs.getInt(1),
-                    new URL(rs.getString(8)),
-                    new Date(rs.getDate(2).getTime()),
-                    rs.getString(6), rs.getString(7),
-                    rs.getFloat(3),
-                    rs.getFloat(4),
-                    rs.getFloat(5));
+            Picture newPic = null;
+                 newPic = new Picture(rs.getInt(1),
+                        new URL(rs.getString(8)),
+                        new Date(rs.getDate(2).getTime()),
+                        rs.getString(6), rs.getString(7),
+                        rs.getFloat(3),
+                        rs.getFloat(4),
+                        rs.getFloat(5));
+                System.out.println("Found "+newPic.getTitle()+" as ID "+id);
 
             return newPic;
 
@@ -143,6 +146,20 @@ public class PictureJdbcDAO implements PictureDAO {
             throw new RuntimeException("DB operation failed: Select * FROM picture", e);
         }
     }
+
+    public int getHighestId() {
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT id FROM picture ORDER BY id DESC;";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("DB operation failed: Select * FROM picture", e);
+        }
+    }
     @Override
     public int count() {
         try (Connection conn = dataSource.getConnection()) {
@@ -162,12 +179,12 @@ public class PictureJdbcDAO implements PictureDAO {
     public Collection<Picture> findByPosition(float longitude, 
             float latitude, float deviation) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM picture WHERE longitude >= ? AND longitude <= ? AND latitude >= ? AND latitude <= ?;";
+            String sql = "SELECT * FROM picture wHERE longitude >= ? AND longitude <= ? AND latitude >= ? AND latitude <= ?;";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setFloat(1,longitude-deviation);
             ps.setFloat(2,longitude+deviation);
-            ps.setFloat(1,latitude-deviation);
-            ps.setFloat(1,latitude+deviation);
+            ps.setFloat(3,latitude-deviation);
+            ps.setFloat(4,latitude+deviation);
             
             ResultSet rs = ps.executeQuery();
 

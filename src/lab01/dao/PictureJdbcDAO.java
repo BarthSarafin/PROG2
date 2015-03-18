@@ -75,10 +75,11 @@ public class PictureJdbcDAO implements PictureDAO {
             String sql = "DELETE FROM picture WHERE title = ? AND longitude = ? AND latitude = ? and comment = ? ";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, item.getTitle());
-            ps.setFloat(2,item.getLongitude());
-            ps.setFloat(3,item.getLatitude());
-            ps.setString(4,item.getUrl().toString());
-            ps.execute();
+            ps.setFloat(2, item.getLongitude());
+            ps.setFloat(3, item.getLatitude());
+            ps.setString(4, item.getUrl().toString());
+            System.out.println(ps.toString());
+            ps.executeUpdate();
             
         } catch (SQLException e) {
             throw new RuntimeException("DB operation failed: Select * FROM picture", e);
@@ -179,7 +180,7 @@ public class PictureJdbcDAO implements PictureDAO {
     public Collection<Picture> findByPosition(float longitude, 
             float latitude, float deviation) {
         try (Connection conn = dataSource.getConnection()) {
-            String sql = "SELECT * FROM picture wHERE longitude >= ? AND longitude <= ? AND latitude >= ? AND latitude <= ?;";
+            String sql = "SELECT * FROM picture WHERE longitude >= ? AND longitude <= ? AND latitude >= ? AND latitude <= ?;";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setFloat(1,longitude-deviation);
             ps.setFloat(2,longitude+deviation);
@@ -188,6 +189,7 @@ public class PictureJdbcDAO implements PictureDAO {
             
             ResultSet rs = ps.executeQuery();
 
+            System.out.println(ps.toString());
             Collection<Picture> pictures = new ArrayList<>();
 
             //Der Cursor im Resultset steht am Anfange BEVOR der

@@ -19,8 +19,8 @@ public class PictureJdbcDAOTest {
 
     private PictureJdbcDAO dao ;
     private int currentPictureCount = 0;
-    private float longitude = 1000.5f;
-    private float latitude = 1000.5f;
+    private float longitude = 1300.5f;
+    private float latitude = 1020.5f;
     private int testId = 222;
     private Picture testPic;
 
@@ -66,20 +66,22 @@ public class PictureJdbcDAOTest {
     @Test
     public void testUpdate() throws Exception {
 
+        dao.insert(testPic);
         testPic.setTitle("UpdateTitle");
         dao.update(testPic);
         Assert.assertEquals("UpdateTitle", dao.findById(dao.getHighestId()).getTitle());
         testPic.setTitle("TestTitle");
         dao.update(testPic);
         Assert.assertEquals("TestTitle", dao.findById(testId).getTitle());
+        dao.delete(testPic);
 
     }
 
 
     @Test
     public void testFindById() throws Exception {
-        Picture readPic = dao.findById(testId);
-        Assert.assertEquals(testId, readPic.getId());
+        Picture readPic = dao.findById(dao.getHighestId());
+        Assert.assertEquals(dao.getHighestId(), readPic.getId());
         Assert.assertEquals("Comment", readPic.getComment());
         Assert.assertEquals("TestTitle", readPic.getTitle());
         Assert.assertEquals(longitude, readPic.getLongitude(), 0.5f);
@@ -107,7 +109,9 @@ public class PictureJdbcDAOTest {
     public void testFindByPosition() throws Exception {
         ArrayList<Picture> pictures = (ArrayList<Picture>) dao.findByPosition(longitude,latitude,2f);
 
+        dao.insert(testPic);
         Assert.assertEquals(1, pictures.size());
+        dao.delete(testPic);
 
     }
     @Test

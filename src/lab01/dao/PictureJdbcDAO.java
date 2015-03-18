@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -51,7 +52,18 @@ public class PictureJdbcDAO implements PictureDAO {
     @Override
     public void update(Picture item) {
         try (Connection conn = dataSource.getConnection()) {
+            String sql = "UPDATE picture SET (id,date,longitude,latitude,altitude,title,comment,url) = (?,?,?,?,?,?,?,?);";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, item.getId());
+            ps.setDate(2,new java.sql.Date(item.getDate().getTime()));
+            ps.setFloat(3, item.getLongitude());
+            ps.setFloat(4, item.getLatitude());
+            ps.setFloat(5, item.getAltitude());
+            ps.setString(6, item.getTitle());
+            ps.setString(7, item.getComment());
+            ps.setString(8, item.getUrl().toString());
 
+            ps.executeUpdate();
         } catch (SQLException e){
             System.out.println("DB operation failed: update(picture): "+e.getMessage());
         }
@@ -59,7 +71,15 @@ public class PictureJdbcDAO implements PictureDAO {
 
     @Override
     public void delete(Picture item) {
-        // TODO Implement method
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "DELETE FROM picture WHERE id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, item.getId());
+            ps.execute();
+            
+        } catch (SQLException e) {
+            throw new RuntimeException("DB operation failed: Select * FROM picture", e);
+        }
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -94,21 +114,85 @@ public class PictureJdbcDAO implements PictureDAO {
 
     @Override
     public Collection<Picture> findAll() {
-        // TODO Implement method
-        return null;
-    }
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM picture ;";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
+            ResultSet rs = ps.executeQuery();
+
+            Collection<Picture> pictures = new ArrayList<>();
+            
+            //Der Cursor im Resultset steht am Anfange BEVOR der
+            //ersten reihe
+            while(rs.next()) {
+                Picture newPic = new Picture(rs.getInt(1),
+                        new URL(rs.getString(8)),
+                        new Date(rs.getDate(2).getTime()),
+                        rs.getString(6), rs.getString(7),
+                        rs.getFloat(3),
+                        rs.getFloat(4),
+                        rs.getFloat(5));
+                
+                pictures.add(newPic);
+                
+            }
+
+            return pictures;
+
+        } catch (SQLException | MalformedURLException e) {
+            throw new RuntimeException("DB operation failed: Select * FROM picture", e);
+        }
+    }
     @Override
     public int count() {
-        // TODO Implement method
-        return 0;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT COUNT(*) FROM picture;";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+
+        } catch (SQLException e) {
+            throw new RuntimeException("DB operation failed: Select * FROM picture", e);
+        }
     }
 
     @Override
     public Collection<Picture> findByPosition(float longitude, 
             float latitude, float deviation) {
-        // TODO Implement method
-        return null;
+        try (Connection conn = dataSource.getConnection()) {
+            String sql = "SELECT * FROM picture WHERE longitude >= ? AND longitude <= ? AND latitude >= ? AND latitude <= ?;";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setFloat(1,longitude-deviation);
+            ps.setFloat(2,longitude+deviation);
+            ps.setFloat(1,latitude-deviation);
+            ps.setFloat(1,latitude+deviation);
+            
+            ResultSet rs = ps.executeQuery();
+
+            Collection<Picture> pictures = new ArrayList<>();
+
+            //Der Cursor im Resultset steht am Anfange BEVOR der
+            //ersten reihe
+            while(rs.next()) {
+                Picture newPic = new Picture(rs.getInt(1),
+                        new URL(rs.getString(8)),
+                        new Date(rs.getDate(2).getTime()),
+                        rs.getString(6), rs.getString(7),
+                        rs.getFloat(3),
+                        rs.getFloat(4),
+                        rs.getFloat(5));
+
+                pictures.add(newPic);
+
+            }
+
+            return pictures;
+
+        } catch (SQLException | MalformedURLException e) {
+            throw new RuntimeException("DB operation failed: Select * FROM picture", e);
+        }
     }
 
 }

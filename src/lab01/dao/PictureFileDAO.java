@@ -1,10 +1,9 @@
 package lab01.dao;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
 
-import model.Picture;
-import lab01.dao.PictureDAO;
+import lab01.model.Picture;
 
 public class PictureFileDAO implements PictureDAO {
     private File dataSource;

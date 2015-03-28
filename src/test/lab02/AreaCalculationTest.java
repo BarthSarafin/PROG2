@@ -13,11 +13,20 @@ public class AreaCalculationTest {
         assertEquals("Triangle is viable and all sides are greater than zero", 6, calculation.calculateTriangle(3,4,5),0.001);
     }
 
-    @Test(expected=IllegalArgumentException.class)
-    public void testOneSideGreaterThanZero() throws Exception {
+//    @Test(expected=IllegalArgumentException.class)
+//    public void testOneSideGreaterThanZero() throws Exception {
+//        calculation.calculateTriangle(3,0,5);
+//    }
+
+    @Test (expected = NotATriangleException.class)
+    public void testOneSideGreaterThanZerO() throws Exception {
         calculation.calculateTriangle(3,0,5);
     }
 
+    @Test (expected = NotATriangleException.class)
+    public void testTwoSideGreaterThanZerO() throws Exception {
+        calculation.calculateTriangle(0,0,5);
+    }
     @Test
     public void testCalculateTriangleAllUnordered() throws Exception {
         assertEquals("Triangle is viable and all sides are greater than zero. b is greatest side. a > c", 6, calculation.calculateTriangle(4,5,3),0.001);

@@ -6,14 +6,14 @@ package lab02;
  */
 public class AreaCalculation {
 
-    public double calculateTriangle(double a, double b, double c) throws IllegalArgumentException {
+    public double calculateTriangle(double a, double b, double c) throws NotATriangleException {
 
         if(isTriangle(a,b,c) && isNotZero(a) && isNotZero(b) && isNotZero(c)) {
             double halfsum = (a + b + c) / 2;
             double area = Math.sqrt(halfsum * (halfsum - a) * (halfsum - b) * (halfsum - c));
             return area;
         } else {
-            throw new IllegalArgumentException("Your values do not form a triangle or are not valid.");
+            throw new NotATriangleException("Your values do not form a triangle or are not valid.");
         }
     }
 

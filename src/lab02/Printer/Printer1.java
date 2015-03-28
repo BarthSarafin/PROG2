@@ -9,15 +9,19 @@ class PrinterThread extends Thread {
 		sleepTime = t;
 	}
 	public void run() {
-		System.out.println(getName() + " run laueft an");
-		for (int i = 1; i < 100; i++) {
-			System.out.print(ch);
-			try {
-				Thread.sleep(sleepTime);
-			} catch (InterruptedException e) {
-			}
-		}
-		System.out.println('\n' + getName() + " run  fertig");
+        if(!Thread.currentThread().equals(this)) {
+            System.out.println("Illegal call: tried to call "+getName()+" from within "+Thread.currentThread().getName());
+        } else {
+            System.out.println(getName() + " run laueft an");
+            for (int i = 1; i < 100; i++) {
+                System.out.print(ch);
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                }
+            }
+            System.out.println('\n' + getName() + " run  fertig");
+        }
 	}
 }
 public class Printer1 {

@@ -3,7 +3,6 @@ package lab01.dao;
 import lab01.model.Picture;
 import lab01.util.SimpleDataSource;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.Assert;
 

@@ -83,7 +83,6 @@ public class PictureFileDAO implements PictureDAO {
             } while (br.ready());
         } catch (IOException e) {
             System.out.println("Exception "+e);
-            return 0;
         }
         System.out.println("File Closed");
         return count;

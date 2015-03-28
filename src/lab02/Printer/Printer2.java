@@ -28,10 +28,7 @@ public class Printer2 implements Runnable {
         System.out.println(Thread.currentThread().getName()+" run laueft an");
         for (int i = 1; i < 100; i++) {
             System.out.print(ch);
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-            }
+            Thread.yield();
         }
         System.out.println('\n' + Thread.currentThread().getName() + " run  fertig");
 
@@ -46,6 +43,13 @@ public class Printer2 implements Runnable {
         Thread t2 = new Thread(b, "PrinterB");
         t1.start();
         t2.start();
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Main ended");
     }
 
 }

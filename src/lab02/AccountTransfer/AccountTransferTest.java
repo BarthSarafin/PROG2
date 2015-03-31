@@ -5,7 +5,7 @@ class AccountTransferThread extends Thread {
 	private Account fromAccount;
 	private Account toAccount;
 	private int amount;
-	private int maxIter = 10000;
+	private int maxIter = 5000;
 
 	public AccountTransferThread (String name, Account fromAccount, Account toAccount, int amount) {
 		super(name);
@@ -17,10 +17,7 @@ class AccountTransferThread extends Thread {
 
 	/*  Transfer amount from fromAccount to toAccount */
 	public void accountTransfer() {
-		if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
-			fromAccount.changeSaldo(-amount);
-			toAccount.changeSaldo(amount);
-		}
+        Account.accountTransfer(fromAccount,toAccount,amount);
 	}
 
 
@@ -41,7 +38,6 @@ public class AccountTransferTest {
 		Account account1 = new Account (1, 10);
 		Account account2 = new Account (2, 10);
 		Account account3 = new Account (3, 999999);
-
 
 		System.out.println ("Start of Transaction");
 		System.out.println ( "Saldo account1: " + account1.getSaldo() );

@@ -13,15 +13,23 @@ public class Account {
 	   return id;
 	}
 
-	public synchronized int getSaldo () {
+    synchronized public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
+        if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
+            fromAccount.changeSaldo(-amount);
+            toAccount.changeSaldo(amount);
+        }
+        return true;
+    }
+    //Synchronzied nicht mehr notwendig.
+	public int getSaldo () {
 	   return saldo;
 	}
 
-	public synchronized void setSaldo(int amount) {
-		this.saldo=amount;
+	public void setSaldo(int amount) {
+            this.saldo=amount;
 	}
 
-	public   synchronized void changeSaldo (int delta) {
+	public void changeSaldo (int delta) {
 		this.saldo += delta;
 	}
 }

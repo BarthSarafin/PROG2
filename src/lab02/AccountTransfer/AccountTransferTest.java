@@ -17,7 +17,7 @@ class AccountTransferThread extends Thread {
 
 	/*  Transfer amount from fromAccount to toAccount */
 	public void accountTransfer() {
-        Account.accountTransfer(fromAccount,toAccount,amount);
+        fromAccount.accountTransfer(toAccount,amount);
 	}
 
 

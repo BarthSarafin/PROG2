@@ -35,22 +35,17 @@ public class Account {
             }
         }
     }*/
-    public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
-        if(fromAccount.getId() < toAccount.getId()) {
-            synchronized (fromAccount) {
-                synchronized (toAccount) {
-                    coreAccountTransfer(fromAccount, toAccount, amount);
+	
+    public boolean accountTransfer(Account toAccount,int amount){
+		Account firstAccount, secondAccount;
+		firstAccount = (this.getId() < toAccount.getId())?this:toAccount;
+		secondAccount = (this.getId() < toAccount.getId())?toAccount:this;
+             synchronized (firstAccount) {
+                synchronized (secondAccount) {
+                    coreAccountTransfer(this, toAccount, amount);
                     return true;
                 }
-            }
-        } else{
-            synchronized (toAccount) {
-                synchronized (fromAccount) {
-                    coreAccountTransfer(fromAccount, toAccount, amount);
-                    return true;
-                }
-            }
-        }
+			 }        
     }
 
     private static void coreAccountTransfer(Account fromAccount, Account toAccount, int amount) {

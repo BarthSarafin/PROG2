@@ -13,13 +13,54 @@ public class Account {
 	   return id;
 	}
 
-    synchronized public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
+    // WORKING FUNCTION
+/*    synchronized public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
         if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
             fromAccount.changeSaldo(-amount);
             toAccount.changeSaldo(amount);
         }
         return true;
+    }*/
+
+    //DEADLOCK FUNCTION
+/*    public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
+        synchronized (fromAccount){
+            synchronized (toAccount){
+                if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
+                    fromAccount.changeSaldo(-amount);
+                    toAccount.changeSaldo(amount);
+                }
+                System.out.println("accounttransfer from "+fromAccount.getId()+" to "+toAccount.getId());
+                return true;
+            }
+        }
+    }*/
+    public static boolean accountTransfer(Account fromAccount, Account toAccount,int amount){
+        if(fromAccount.getId() < toAccount.getId()) {
+            synchronized (fromAccount) {
+                synchronized (toAccount) {
+                    coreAccountTransfer(fromAccount, toAccount, amount);
+                    return true;
+                }
+            }
+        } else{
+            synchronized (toAccount) {
+                synchronized (fromAccount) {
+                    coreAccountTransfer(fromAccount, toAccount, amount);
+                    return true;
+                }
+            }
+        }
     }
+
+    private static void coreAccountTransfer(Account fromAccount, Account toAccount, int amount) {
+        if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
+            fromAccount.changeSaldo(-amount);
+            toAccount.changeSaldo(amount);
+        }
+        System.out.println("accounttransfer from " + fromAccount.getId() + " to " + toAccount.getId());
+    }
+
     //Synchronzied nicht mehr notwendig.
 	public int getSaldo () {
 	   return saldo;

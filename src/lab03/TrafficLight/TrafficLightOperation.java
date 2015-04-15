@@ -10,15 +10,25 @@ class TrafficLight {
 
 	public synchronized void passby() {
 		// ToDo: wait as long the light is red
+		if(red){
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	public synchronized void switchToRed() {
-		// ToDo: set light to red
+		this.red = true;
 	}
 
 	public synchronized void switchToGreen() {
 		// Todo: set light to green
 		// waiting cars can now pass by
+		this.red = false;
+		notify();
 	}
 }
 
@@ -39,11 +49,20 @@ class Car extends Thread {
 	
 	private void gotoNextLight() {
 		// ToDo: Helper method to move car to next light
+		pos++;
+		pos = pos%trafficLights.length;
 	}
 
 	public void run() {
 		while (true) {
 			// ToDo: drive endlessly through all lights
+			try {
+				sleep((int)(Math.random() * 500));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			trafficLights[pos].passby();
+			gotoNextLight();
 		}
 	}
 }

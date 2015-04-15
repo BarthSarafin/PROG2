@@ -65,6 +65,9 @@ public class ForkManager {
         int rightNeighbor = ((i+1)>=nrForks)?(i+1)-nrForks:i+1;
         releaseFork(i);
         releaseFork(rightNeighbor);
+        //TODO: fehlerhafter monitor. signal() einbauen
+        forks[i].cond.signal();
+        forks[rightNeighbor].cond.signal();
         pairLock[i].unlock();
     }
     public void releaseFork(int i) {

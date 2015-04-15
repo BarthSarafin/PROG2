@@ -31,7 +31,7 @@ public class Philosopher extends Thread {
             philoState = PhiloState.thinking;
             table.notifyStateChange(this);
             int time = 5;
-            sleep((int) (Math.random() * time * 50));
+            sleep((int) (Math.random() * time * 100));
         } catch (InterruptedException e) {
         }
     }

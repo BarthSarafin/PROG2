@@ -30,8 +30,8 @@ public class Philosopher extends Thread {
         try {
             philoState = PhiloState.thinking;
             table.notifyStateChange(this);
-            int time = 3; // etwas nach unten geschraubt zum schneller essen
-            sleep((int) (Math.random() * time * 100));
+            int time = 5;
+            sleep((int) (Math.random() * time * 50));
         } catch (InterruptedException e) {
         }
     }

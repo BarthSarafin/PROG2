@@ -1,3 +1,5 @@
+package lab03.CircularBuffer;
+
 public interface Buffer<T> {
     boolean put(T element) throws InterruptedException;
     T get() throws InterruptedException;

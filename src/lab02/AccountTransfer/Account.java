@@ -39,26 +39,25 @@ public class Account {
         if(fromAccount.getId() < toAccount.getId()) {
             synchronized (fromAccount) {
                 synchronized (toAccount) {
-                    coreAccountTransfer(fromAccount, toAccount, amount);
-                    return true;
+                    return coreAccountTransfer(fromAccount, toAccount, amount);
                 }
             }
         } else{
             synchronized (toAccount) {
                 synchronized (fromAccount) {
-                    coreAccountTransfer(fromAccount, toAccount, amount);
-                    return true;
+                    return coreAccountTransfer(fromAccount, toAccount, amount);
                 }
             }
         }
     }
 
-    private static void coreAccountTransfer(Account fromAccount, Account toAccount, int amount) {
+    private static boolean coreAccountTransfer(Account fromAccount, Account toAccount, int amount) {
         if (fromAccount.getSaldo() >= amount) { // Account must not be overdrawn
             fromAccount.changeSaldo(-amount);
             toAccount.changeSaldo(amount);
         }
         System.out.println("accounttransfer from " + fromAccount.getId() + " to " + toAccount.getId());
+        return true;
     }
 
     //Synchronzied nicht mehr notwendig.

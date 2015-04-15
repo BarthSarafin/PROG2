@@ -3,66 +3,6 @@ package lab03.Philosophers;
 import java.util.*;
 import java.util.concurrent.locks.*;
 
-// ForkManager manages the resources (=forks), used by the philosophers
-class ForkManager {
-
-    enum ForkState {
-        free, awaited, occupied
-    }
-
-    class Fork {
-        public ForkState forkState;
-        public Condition cond;
-
-        public Fork(Lock m) {
-            cond = m.newCondition();
-            forkState = ForkState.free;
-        }
-    }
-
-    private int nrForks;
-    private Fork[] forks;
-    private Lock mutex;
-
-    public ForkManager(int nrForks) {
-        mutex = new ReentrantLock();
-        this.nrForks = nrForks;
-        forks = new Fork[nrForks];
-        for (int i = 0; i < nrForks; i++)
-            forks[i] = new Fork(mutex);
-    }
-
-    public void acquireFork(int i) {
-        try {
-            mutex.lock();
-            while (forks[i].forkState == ForkState.occupied)
-                forks[i].cond.await();
-            forks[i].forkState = ForkState.occupied;
-        } catch (InterruptedException e) {
-        } finally {
-            mutex.unlock();
-        }
-    }
-
-    public void releaseFork(int i) {
-        try {
-            mutex.lock();
-            forks[i].forkState = ForkState.free;
-            forks[i].cond.signal();
-        } finally {
-            mutex.unlock();
-        }
-    }
-
-    public int left(int i) {
-        return (nrForks + i - 1) % nrForks;
-    }
-
-    public int right(int i) {
-        return (i + 1) % nrForks;
-    }
-}
-
 enum PhiloState {
     thinking, hungry, eating;
 }
@@ -98,7 +38,7 @@ class Philosopher extends Thread {
             philoState = PhiloState.thinking;
             table.notifyStateChange(this);
             int time = 5;
-            sleep((int) (Math.random() * time * 1000));
+            sleep((int) (Math.random() * time * 100));
         } catch (InterruptedException e) {
         }
     }
@@ -118,18 +58,18 @@ class Philosopher extends Thread {
         table.notifyStateChange(this);
 
         ForkManager mgr = table.getForkManager();
-        mgr.acquireFork(id);
+        mgr.aquirePairOfForks(id);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
         }
-        mgr.acquireFork(mgr.right(id));
+//        mgr.acquireFork(mgr.right(id));
     }
 
     private void putForks() {
         ForkManager mgr = table.getForkManager();
-        mgr.releaseFork(id);
-        mgr.releaseFork(mgr.right(id));
+        mgr.releaseForks(id);
+//        mgr.releaseFork(mgr.right(id));
 
     }
 

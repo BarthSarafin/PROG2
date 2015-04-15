@@ -54,26 +54,17 @@ public class ForkManager {
 
     public void aquirePairOfForks(int i){
 
-        try{
-            pairLock[i].lock();
-            while(forks[i].forkState == ForkState.occupied){
-                acquireFork(i);
-                acquireFork(i+1);
-            }
-            forks[i].forkState = ForkState.occupied;
-            forks[i].forkState = ForkState.occupied;
-        } catch (Exception e){
-
-        }
-        finally {
-        }
-
+        int rightNeighbor = ((i+1)>=nrForks)?(i+1)-nrForks:i+1;
+        pairLock[i].lock();
+        acquireFork(i);
+        acquireFork(rightNeighbor);
 
     }
 
     public void releaseForks(int i) {
+        int rightNeighbor = ((i+1)>=nrForks)?(i+1)-nrForks:i+1;
         releaseFork(i);
-        releaseFork(i+1);
+        releaseFork(rightNeighbor);
         pairLock[i].unlock();
     }
     public void releaseFork(int i) {

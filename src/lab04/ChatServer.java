@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.logging.Logger;
 
 /**
  * Created by Fabian on 13.05.15.
@@ -21,25 +22,22 @@ public class ChatServer {
             throw new IllegalArgumentException("Parameter(s): <Port>");
         int servPort=Integer.parseInt(args[0]); //server port
 
+        int echoServPort = Integer.parseInt(args[0]); // Server port
 
+        // Create a server socket to accept client connection requests
+        ServerSocket servSock = new ServerSocket(echoServPort);
 
-        int recvMsgSize ;
-// Size of received message
-        byte[] receiveBuf = new byte[30];
-// Receive buffer
-// Create a server socket to accept client connection requests
-        ServerSocket servSoc = new ServerSocket ( servPort );
-        while (true) { // Run forever, accepting and servicing connections
-            Socket clntSock = servSoc.accept ();
-// Get client connection
-            InputStream in = clntSock.getInputStream ();
-            OutputStream out = clntSock.getOutputStream ();
-            while (( recvMsgSize = in.read(receiveBuf) ) != -1) {
-                System.out.println("Received "+new String(receiveBuf));
-                out.write ( receiveBuf , 0, recvMsgSize );
-            }
-            clntSock.close ();
-// Server - side socket close
+        Logger logger = Logger.getLogger("practical");
+
+        // Run forever, accepting and spawning a thread for each connection
+        while (true) {
+            Socket clntSock = servSock.accept(); // Block waiting for connection
+            // Spawn thread to handle new connection
+
+            Thread thread = new Thread(new ClientHandler(clntSock, logger));
+
+            thread.start();
+            logger.info("Created and started Thread " + thread.getName());
         }
     }
 }

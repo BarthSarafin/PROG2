@@ -1,7 +1,8 @@
 package lab02.Printer;
 
 /**
- * Created by Fabian on 28.03.15.
+ * @author Stefan R. Bachmann on  03.02.2016
+ * @version v0.1 - lab02
  */
 public class Printer2 implements Runnable {
 

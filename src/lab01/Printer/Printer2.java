@@ -26,12 +26,12 @@ public class Printer2 implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName()+" run laueft an");
+        System.out.println(Thread.currentThread().getName()+" run starts");
         for (int i = 1; i < 100; i++) {
             System.out.print(ch);
             Thread.yield();
         }
-        System.out.println('\n' + Thread.currentThread().getName() + " run  fertig");
+        System.out.println('\n' + Thread.currentThread().getName() + " run  done");
 
     }
 
@@ -50,7 +50,7 @@ public class Printer2 implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Main ended");
+        System.out.println("Main ends");
     }
 
 }

@@ -38,9 +38,9 @@ public class Account {
 	
     public boolean accountTransfer(Account toAccount,int amount){
 		Account firstAccount, secondAccount;
-		firstAccount = (this.getId() < toAccount.getId())?this:toAccount;
+		firstAccount = (this.getId() < toAccount.getId())?this:toAccount;	// deadlock verhindern
 		secondAccount = (this.getId() < toAccount.getId())?toAccount:this;
-             synchronized (firstAccount) {
+             synchronized (firstAccount) {		// synch sorgt dafür, dass die accounts auf den einen, gleichen Thread gelocked werden
                 synchronized (secondAccount) {
                     coreAccountTransfer(this, toAccount, amount);
                     return true;

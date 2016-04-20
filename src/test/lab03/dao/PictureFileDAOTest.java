@@ -20,7 +20,7 @@ public class PictureFileDAOTest {
     private int currentPictureCount = 0;
     private float longitude = 1000.5f;
     private float latitude = 1000.5f;
-    private int testId = 222;
+    private int testId = 4;
     private Picture testPic;
 
     @Before
@@ -36,13 +36,14 @@ public class PictureFileDAOTest {
             date = df.parse("2015-02-01 19:29:22");
         } catch (ParseException e){}
         try {
-            testPic= new Picture(testId,
+            testPic= new Picture(
                     new URL("http://this.is.a.url.com"),
                     date,
                     "TestTitle", "Comment",
                     longitude,
                     latitude,
                     0f);
+			dao.insert(testPic);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

@@ -4,7 +4,7 @@ import java.util.concurrent.locks.*;
 
 /**
  * @author Stefan R. Bachmann on  03.03.2016
- * @version v0.1 - lab01
+ * @version v0.1 - lab02
  */
 public class GuardedCircularBuffer<T> extends CircularBuffer<T> {
 

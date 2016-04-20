@@ -61,7 +61,7 @@ public class ForkManager {
 
     }
 
-    public void releaseForks(int i) {
+    public void releaseForks(int i) { //mutex.lock
         int rightNeighbor = ((i+1)>=nrForks)?(i+1)-nrForks:i+1;
         releaseFork(i);
         releaseFork(rightNeighbor);

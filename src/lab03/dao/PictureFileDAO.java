@@ -1,21 +1,19 @@
 package lab03.dao;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import lab03.model.Picture;
+import lab03.util.StringWriter;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-
-import lab03.model.Picture;
+import java.util.List;
 
 public class PictureFileDAO implements PictureDAO {
     private File dataSource;
+	private lab03.util.StringWriter stringWriter = new StringWriter();
+	private static int id = 3;
+
+	List<Picture> pictures = new ArrayList<>();
 
     public PictureFileDAO(File dataSource) {
         super();
@@ -23,22 +21,42 @@ public class PictureFileDAO implements PictureDAO {
     }
 
     @Override
-    public void insert(Picture item) {
+    public void insert(Picture item) { // für ID wäre auch UUID möglich. Aber dann müssten alle types geändert werden or item.setId(item.hashCode());
         // TODO Implement method
-        throw new UnsupportedOperationException("Not yet implemented");
-
+		item.setId(id++);
+		pictures.add(item);
+		writeToFile();
     }
 
     @Override
     public void update(Picture item) {
         // TODO Implement method
-        throw new UnsupportedOperationException("Not yet implemented");
+        List<Picture> updatedFile = findAll();
+		for (Picture pictureToCheck : updatedFile) {
+			if (item.getId() == pictureToCheck.getId()) {
+				pictureToCheck.setComment(item.getComment());
+				pictureToCheck.setAltitude(item.getAltitude());
+				pictureToCheck.setTitle(item.getTitle());
+				pictureToCheck.setLatitude(item.getLatitude());
+				pictureToCheck.setLongitude(item.getLongitude());
+				pictureToCheck.setUrl(item.getUrl());
+			}
+		}
+		pictures = updatedFile;
+		writeToFile();
     }
 
     @Override
     public void delete(Picture item) {
         // TODO Implement method
-        throw new UnsupportedOperationException("Not yet implemented");
+        List<Picture> updatedFile = findAll();
+		for(Picture pictureToCheck : updatedFile){
+			if(item.getId() == pictureToCheck.getId()){
+				updatedFile.remove(pictureToCheck);
+			}
+		}
+		pictures = updatedFile;
+		writeToFile();
     }
 
     @Override
@@ -51,7 +69,7 @@ public class PictureFileDAO implements PictureDAO {
             do {
                 line = br.readLine();
                 System.out.println(line);
-                Picture newPic = getPicFromString(line);
+                Picture newPic = stringWriter.getPicFromString(line);
                 if(newPic.getId() == id){
                     return newPic;
                 }
@@ -65,9 +83,24 @@ public class PictureFileDAO implements PictureDAO {
     }
 
     @Override
-    public Collection<Picture> findAll() {
-        // TODO Implement method
-        return null;
+    public List<Picture> findAll() {
+		BufferedReader br;
+
+		try {
+			br = new BufferedReader(new FileReader(dataSource));
+			String line;
+			do {
+				line = br.readLine();
+				System.out.println(line);
+				Picture newPic = stringWriter.getPicFromString(line);
+				pictures.add(newPic);
+			} while (br.ready());
+		}catch (IOException e) {
+			System.out.println("Exception "+e);
+			return null;
+		}
+		System.out.println("File Closed");
+		return pictures;
     }
 
     @Override
@@ -91,7 +124,7 @@ public class PictureFileDAO implements PictureDAO {
     public Collection<Picture> findByPosition(float longitude, float latitude,
             float deviation) {
         BufferedReader br;
-        ArrayList<Picture> pictures = new ArrayList<>();
+        List<Picture> pictures = new ArrayList<>();
 
         try {
             br = new BufferedReader(new FileReader(dataSource));
@@ -99,7 +132,7 @@ public class PictureFileDAO implements PictureDAO {
             do {
                 line = br.readLine();
                 System.out.println(line);
-                Picture newPic = getPicFromString(line);
+                Picture newPic = stringWriter.getPicFromString(line);
                 if(newPic.getLatitude() >= latitude - deviation && newPic.getLatitude() <= latitude + deviation && newPic.getLongitude() >= longitude - deviation && newPic.getLongitude() <= longitude - deviation){
                     pictures.add(newPic);
                 }
@@ -112,29 +145,30 @@ public class PictureFileDAO implements PictureDAO {
         return pictures;
     }
 
-    private Picture getPicFromString(String line) {
-        String[] fragments = line.split(";");
-        SimpleDateFormat datumUndUhrzeit = new
-                SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+	private void writeToFile(){
+		Writer writer = null;
+		String fileName = "data.csv";
 
-        Picture newPicture;
-        try {
+		try {
+			writer = new FileWriter(fileName);
 
-            Date date = datumUndUhrzeit.parse(fragments[0]);
-            newPicture = new Picture(new URL(fragments[6]),
-                    date,
-                    fragments[4],
-                    fragments[5],
-                    Float.valueOf(fragments[1]),
-                    Float.valueOf(fragments[2]),
-                    Float.valueOf(fragments[3]));
-            return newPicture;
-        } catch (MalformedURLException |ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-        //public Picture(URL url, Date date, String title, String comment,
-        //float longitude, float latitude, float altitude) {
-    }
+			for (Picture picture : pictures) {
+				writer.append(picture.toStringWithComma());
+			}
+			System.out.println("CSV file was created successfully !!!");
+		} catch (IOException e) {
+			System.out.println("Error while flushing/closing fileWriter !!!");
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				System.out.println("Error while flushing/closing fileWriter !!!");
+				e.printStackTrace();
+			}
+		}
+
+	}
 
 }

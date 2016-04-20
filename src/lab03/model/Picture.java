@@ -114,4 +114,16 @@ public class Picture {
         sb.append("\n\t altitude: "+altitude);
         return sb.toString();
     }
+
+    public String toStringWithComma(){
+		StringBuffer sb = new StringBuffer();
+		sb.append(""+id);
+		sb.append(";"+url);
+		sb.append(";"+title);
+		sb.append(";"+comment);
+		sb.append(";"+longitude);
+		sb.append(";"+latitude);
+		sb.append(";"+altitude);
+		return sb.toString();
+	}
 }

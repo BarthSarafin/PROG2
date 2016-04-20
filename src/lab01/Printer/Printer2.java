@@ -29,7 +29,7 @@ public class Printer2 implements Runnable {
         System.out.println(Thread.currentThread().getName()+" run starts");
         for (int i = 1; i < 100; i++) {
             System.out.print(ch);
-            Thread.yield();
+            Thread.yield(); // gibt den platz frei, falls die JBM jemanden anderen bringen will
         }
         System.out.println('\n' + Thread.currentThread().getName() + " run  done");
 
@@ -45,7 +45,7 @@ public class Printer2 implements Runnable {
         t1.start();
         t2.start();
         try {
-            t1.join();
+            t1.join();  // join() erzeugt, dass t2 wartet bis t1 fertig "Warteschleife"
             t2.join();
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -1,18 +1,19 @@
 package lab03;
 
-import java.sql.*;
+import lab03.dao.PictureJdbcDAO;
+import lab03.model.Picture;
+import lab03.util.*;
+import lab03.util.StringWriter;
+
+import javax.sql.DataSource;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
-
-import javax.sql.DataSource;
-
-import lab03.model.Picture;
-import lab03.util.SimpleDataSource;
 
 /* This test-application reads some picture data from terminal, 
  * saves it to the DB, read it from the DB and prints the result
@@ -22,6 +23,8 @@ public class PictureImport {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static PrintWriter out = new PrintWriter(System.out, true);
     private DataSource ds;
+    private lab03.util.StringWriter stringWriter = new StringWriter();
+	private PictureJdbcDAO pictureJdbcDAO;
 
     public static void main(String[] args) {
         String dbUser = prompt("Username: ");
@@ -45,6 +48,7 @@ public class PictureImport {
 
     PictureImport(String dbUrl, String dbUser, String dbPasswd) {
         this.ds = new SimpleDataSource(dbUrl, dbUser, dbPasswd);
+		this.pictureJdbcDAO = new PictureJdbcDAO(ds);
     }
 
     public Picture createPicture() {
@@ -151,8 +155,9 @@ public class PictureImport {
             do {
                 line = br.readLine();
                 System.out.println(line);
-                Picture newPic = getPicFromString(line);
-                addPicture(newPic);
+                Picture newPic = stringWriter.getPicFromString(line);
+                pictureJdbcDAO.insert(newPic);
+				//addPicture(newPic);
             } while (br.ready());
         }catch (IOException e) {
             System.out.println("Exception "+e);
@@ -160,7 +165,7 @@ public class PictureImport {
         System.out.println("File Closed");
     }
 
-    private Picture getPicFromString(String line) {
+/*    public Picture getPicFromString(String line) {
         String[] fragments = line.split(";");
         SimpleDateFormat datumUndUhrzeit = new
                  SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
@@ -183,7 +188,7 @@ public class PictureImport {
         }
         //public Picture(URL url, Date date, String title, String comment,
         //float longitude, float latitude, float altitude) {
-    }
+    }*/
 
     // prompt function -- to read input string
     static String prompt(String prompt) {

@@ -1,9 +1,11 @@
 package lab04;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.logging.SocketHandler;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.Observable;
 
 public class ClientNetworkHandler extends Observable implements Runnable {
 
@@ -50,7 +52,7 @@ public class ClientNetworkHandler extends Observable implements Runnable {
                         //System.out.println("Received header: "+new String(header));
 
                         int length = Byte.toUnsignedInt(header[1]);
-                        //System.out.println("Lenght: "+length);
+                        //System.out.println("Length: "+length);
                         byte[] message = new byte[length];
                         in.read(message,0,length);
                         //System.out.println("Received Message: " + new String(message));

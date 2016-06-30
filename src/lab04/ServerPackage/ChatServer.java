@@ -1,16 +1,15 @@
-package lab04;
+package lab04.ServerPackage;
 
-import javax.xml.transform.sax.SAXSource;
+import lab04.ClientHandler;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.logging.Logger;
 
 /**
- * Created by Fabian on 13.05.15.
+ * Created by Stefan R. Bachmann
+ * v.0.1 100316
  */
 public class ChatServer {
 
@@ -20,9 +19,9 @@ public class ChatServer {
         if(args.length!=1)
             // Test for correct # of  args
             throw new IllegalArgumentException("Parameter(s): <Port>");
-        int servPort=Integer.parseInt(args[0]); //server port
+        int servPort = Integer.parseInt(args[0]); //server port
 
-        int echoServPort = Integer.parseInt(args[0]); // Server port
+        int echoServPort = Integer.parseInt(args[0]); // ServerPackage port
 
         // Create a server socket to accept client connection requests
         ServerSocket servSock = new ServerSocket(echoServPort);

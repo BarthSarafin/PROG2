@@ -1,13 +1,16 @@
 package lab04;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.text.*;
-
-import java.util.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Observable;
+import java.util.Observer;
 
 public class Client {
     /*
@@ -17,10 +20,10 @@ public class Client {
     public static void main(String[] args) {
         // parse arguments   
         if (args.length != 2) { // Test for correct # of args
-            throw new IllegalArgumentException("Parameters: <Server> <Port>");
+            throw new IllegalArgumentException("Parameters: <ServerPackage> <Port>");
         }
-        String serverAddress = args[0];             // Server address
-        int serverPort = Integer.parseInt(args[1]); // Server port no.
+        String serverAddress = args[0];             // ServerPackage address
+        int serverPort = Integer.parseInt(args[1]); // ServerPackage port no.
         // init & start Network Handler Thread and open connection
         ClientNetworkHandler networkHandler = 
                 new ClientNetworkHandler(serverAddress, serverPort);
@@ -97,15 +100,13 @@ class ClientView extends JFrame implements Observer {
      */
     public void update(Observable model, Object arg) {
         final String message = networkHandler.getMessage();
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    ClientView.this.doc.insertString(
-                            ClientView.this.doc.getLength(),
-                            message,
-                            null);
-                } catch (BadLocationException e) {;}
-            }
-        });
+        SwingUtilities.invokeLater(() -> {
+			try {
+				ClientView.this.doc.insertString(
+						ClientView.this.doc.getLength(),
+						message,
+						null);
+			} catch (BadLocationException e) {;}
+		});
     }
 }

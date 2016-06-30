@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class ClientHandler implements Runnable {
 	private Socket clntSock; // Socket connect to client
-	private Logger logger; // Server logger
+	private Logger logger; // ServerPackage logger
 
 	public ClientHandler(Socket clntSock, Logger logger) {
 		this.clntSock = clntSock;
